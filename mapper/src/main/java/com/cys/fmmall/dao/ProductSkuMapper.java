@@ -1,0 +1,12 @@
+package com.cys.fmmall.dao;
+
+import com.cys.fmmall.entity.ProductSku;
+import com.cys.fmmall.general.GeneralDao;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ProductSkuMapper extends GeneralDao<ProductSku> {
+    List<ProductSku> selectLowPriceByProductId(String productId);
+}

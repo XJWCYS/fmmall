@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cys.fmmall.dao.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.cys.fmmall.entity.Product">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="root_category_id" jdbcType="INTEGER" property="rootCategoryId" />
+    <result column="sold_num" jdbcType="INTEGER" property="soldNum" />
+    <result column="product_status" jdbcType="INTEGER" property="productStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+
+
+
+
+  <resultMap id="recommendProductsMap" type="com.cys.fmmall.entity.ProductVO">
+    <id column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="root_category_id" jdbcType="INTEGER" property="rootCategoryId" />
+    <result column="sold_num" jdbcType="INTEGER" property="soldNum" />
+    <result column="product_status" jdbcType="INTEGER" property="productStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <collection column="product_id" property="imgs" select="com.cys.fmmall.dao.ProductImgMapper.selectProductImgByProductId" />
+  </resultMap>
+
+  <select id="selectRecommendProducts" resultMap="recommendProductsMap">
+    SELECT
+    product_id,
+    product_name,
+    category_id,
+    root_category_id,
+    sold_num,
+    product_status,
+    content,
+    create_time,
+    update_time
+    FROM product
+    ORDER BY create_time
+    DESC LIMIT 0,3;
+  </select>
+
+  <select id="selectTop6ByCategroy" resultMap="recommendProductsMap">
+    SELECT
+    product_id,
+    product_name,
+    category_id,
+    root_category_id,
+    sold_num,
+    product_status,
+    content,
+    create_time,
+    update_time
+    FROM product
+    WHERE root_category_id = #{cid}
+    ORDER BY sold_num
+    DESC LIMIT 0,6;
+  </select>
+
+
+  <resultMap id="BaseResultMapVO" type="com.cys.fmmall.entity.ProductVO">
+    <id column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="root_category_id" jdbcType="INTEGER" property="rootCategoryId" />
+    <result column="sold_num" jdbcType="INTEGER" property="soldNum" />
+    <result column="product_status" jdbcType="INTEGER" property="productStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <collection column="product_id" property="skus" select="com.cys.fmmall.dao.ProductSkuMapper.selectLowPriceByProductId" />
+  </resultMap>
+
+
+  <select id="selectProductByCategoryId" resultMap="BaseResultMapVO">
+    select
+      product_id,
+      product_name,
+      category_id,
+      root_category_id,
+      sold_num,
+      product_status,
+      content,
+      create_time,
+      update_time
+    from product
+    where category_id = #{cid}
+    limit #{start},#{limit}
+  </select>
+
+  <select id="selectProductByKeyword" resultMap="BaseResultMapVO">
+    select
+      product_id,
+      product_name,
+      category_id,
+      root_category_id,
+      sold_num,
+      product_status,
+      content,
+      create_time,
+      update_time
+    from product
+    where product_name like #{kw}
+    limit #{start},#{limit}
+  </select>
+
+
+
+  <select id="selectBrandByCategoryId" resultSets="java.util.List" resultType="String">
+    SELECT
+    DISTINCT brand
+    FROM product_params
+    where product_id
+    in (SELECT product_id FROM product where category_id = #{cid})
+  </select>
+
+  <select id="selectBrandByKeyword" resultSets="java.util.List" resultType="String">
+    SELECT
+    DISTINCT brand
+    FROM product_params
+    where product_id
+    in (SELECT product_id FROM product where product_name like #{kw})
+  </select>
+
+</mapper>
