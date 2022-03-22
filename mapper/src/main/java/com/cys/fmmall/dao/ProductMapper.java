@@ -14,6 +14,7 @@ public interface ProductMapper extends GeneralDao<Product> {
     //查询销量前六的商品
     List<ProductVO> selectTop6ByCategroy(int cid);
     //根据三级分类分页查询商品数据
+
     List<ProductVO> selectProductByCategoryId(@Param("cid") int cid,
                                               @Param("start") int start,
                                               @Param("limit") int limit);
