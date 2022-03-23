@@ -21,7 +21,6 @@ public interface ProductMapper extends GeneralDao<Product> {
 
     //根据三级分类id查询品牌
     List<String> selectBrandByCategoryId(int cid);
-    //合并分支冲突test
 
     //根据搜索关键字分页查询商品数据
     List<ProductVO> selectProductByKeyword(@Param("kw") String kw,
