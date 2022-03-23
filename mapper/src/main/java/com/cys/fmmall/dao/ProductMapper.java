@@ -24,6 +24,7 @@ public interface ProductMapper extends GeneralDao<Product> {
     //test1
     //test3
     //test2
+    //test4
     //根据搜索关键字分页查询商品数据
     List<ProductVO> selectProductByKeyword(@Param("kw") String kw,
                                               @Param("start") int start,
